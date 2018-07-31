@@ -1,11 +1,11 @@
 ---
 services: cosmos-db
 platforms: nodejs
-author: andrewhoh
+author: deborahc
 ---
 
 # Developing a Node.js app using the Azure Cosmos DB SQL API
-Azure Cosmos DB is a globally distributed multi-model database. One of the supported APIs is the SQL API, which provides a JSON document model with SQL querying and JavaScript procedural logic. This sample shows you how to use the Azure Cosmos DB with the SQL API to store and access data from a Node.js application.
+Azure Cosmos DB is a globally distributed multi-model database. One of the supported APIs is the SQL API, which provides a JSON document model with SQL querying and JavaScript procedural logic. This sample shows you how to use Azure Cosmos DB with the SQL API to store and access data from a Node.js application.
 
 ## Running this sample
 * Before you can run this sample, you must have the following perquisites:
@@ -14,15 +14,15 @@ Azure Cosmos DB is a globally distributed multi-model database. One of the suppo
 	* [Git](http://git-scm.com/).
 
 
-1. Clone this repository using `git clone git@github.com:Azure-Samples/azure-cosmos-db-documentdb-nodejs-getting-started.git cosmosdb`
+1. Clone this repository using `git clone git@github.com:Azure-Samples/azure-cosmos-db-sql-api-nodejs-getting-started.git cosmosdb`
 
 2. Change directories to the repo using `cd cosmosdb`
 
-3. Next, substitute the endpoint and authorization key in `config.js` with your Cosmos DB account's values.
+3. Next, substitute the endpoint and authorization key in `config.js` with your Azure Cosmos DB account's values.
 
 	```
 	config.endpoint = "~your Azure Cosmos DB endpoint here~";
-	config.authKey = "~your auth key here~";
+	config.primaryKey = "~your auth key here~";
 	```
 
 5. Run `npm install` in a terminal to install required npm modules
