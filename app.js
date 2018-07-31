@@ -1,14 +1,16 @@
 //@ts-check
-var config = require("./config");
-var url = require('url');
+const CosmosClient = require('@azure/cosmos').CosmosClient;
 
-var endpoint = config.endpoint;
-var masterKey = config.primaryKey;
+const config = require('./config');
+const url = require('url');
 
-var databaseId = config.database.id;
-var containerId = config.container.id;
+const endpoint = config.endpoint;
+const masterKey = config.primaryKey;
 
-var CosmosClient = require("@azure/cosmos").CosmosClient;
+const HttpStatusCodes = { NOTFOUND: 404 };
+
+const databaseId = config.database.id;
+const containerId = config.container.id;
 
 const client = new CosmosClient({ endpoint: endpoint, auth: { masterKey: masterKey } });
 
@@ -55,7 +57,7 @@ async function createFamilyItem(itemBody) {
     }
     catch (error) {
         // create the family item if it does not exist
-        if (error.code === 404) {
+        if (error.code === HttpStatusCodes.NOTFOUND) {
             const { item } = await client.database(databaseId).container(containerId).items.create(itemBody);
             console.log(`Created family item with id:\n${itemBody.id}\n`);
         } else {
@@ -133,6 +135,7 @@ createDatabase()
     .then(() => createFamilyItem(config.items.Wakefield))
     .then(() => queryContainer())
     .then(() => replaceFamilyItem(config.items.Andersen))
+    .then(() => queryContainer())
     .then(() => deleteFamilyItem(config.items.Andersen))
     .then(() => cleanup())
     .then(() => { exit(`Completed successfully`); })
