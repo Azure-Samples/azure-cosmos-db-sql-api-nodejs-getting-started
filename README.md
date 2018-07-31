@@ -1,57 +1,40 @@
-# Project Name
+---
+services: cosmos-db
+platforms: nodejs
+author: andrewhoh
+---
 
-(short, 1-3 sentenced, description of the project)
+# Developing a Node.js app using the Azure Cosmos DB SQL API
+Azure Cosmos DB is a globally distributed multi-model database. One of the supported APIs is the SQL API, which provides a JSON document model with SQL querying and JavaScript procedural logic. This sample shows you how to use the Azure Cosmos DB with the SQL API to store and access data from a Node.js application.
 
-## Features
-
-This project framework provides the following features:
-
-* Feature 1
-* Feature 2
-* ...
-
-## Getting Started
-
-### Prerequisites
-
-(ideally very short, if any)
-
-- OS
-- Library version
-- ...
-
-### Installation
-
-(ideally very short)
-
-- npm install [package name]
-- mvn install
-- ...
-
-### Quickstart
-(Add steps to get up and running quickly)
-
-1. git clone [repository clone url]
-2. cd [respository name]
-3. ...
+## Running this sample
+* Before you can run this sample, you must have the following perquisites:
+	* An active Azure Cosmos DB account - If you don't have an account, refer to the [Create an Azure Cosmos DB account](https://docs.microsoft.com/en-us/azure/cosmos-db/create-sql-api-nodejs#create-a-database-account) article.
+	* [Node.js](https://nodejs.org/en/) version v0.10.29 or higher.
+	* [Git](http://git-scm.com/).
 
 
-## Demo
+1. Clone this repository using `git clone git@github.com:Azure-Samples/azure-cosmos-db-documentdb-nodejs-getting-started.git cosmosdb`
 
-A demo app is included to show how to use the project.
+2. Change directories to the repo using `cd cosmosdb`
 
-To run the demo, follow these steps:
+3. Next, substitute the endpoint and authorization key in `config.js` with your Cosmos DB account's values.
 
-(Add steps to start up the demo)
+	```
+	config.endpoint = "~your Azure Cosmos DB endpoint here~";
+	config.authKey = "~your auth key here~";
+	```
 
-1.
-2.
-3.
+5. Run `npm install` in a terminal to install required npm modules
+ 
+6. Run `node app.js` in a terminal to start your start your node application.
 
-## Resources
+## About the code
+The code included in this sample is intended to get you quickly started with a Node.js console application that connects to Azure Cosmos DB with the SQL API.
 
-(Any additional resources or related projects)
+## More information
 
-- Link to supporting information
-- Link to similar sample
-- ...
+- [Azure Cosmos DB](https://docs.microsoft.com/azure/cosmos-db/introduction)
+- [Azure Cosmos DB: SQL API](https://docs.microsoft.com/en-us/azure/cosmos-db/sql-api-introduction)
+- [Azure Cosmos DB Node.js SDK](https://docs.microsoft.com/en-us/azure/cosmos-db/sql-api-sdk-node)
+- [Azure Cosmos DB Node.js SDK Reference Documentation](http://azure.github.io/azure-documentdb-node/)
