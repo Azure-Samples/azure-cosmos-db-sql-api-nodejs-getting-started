@@ -4,6 +4,6 @@
   "description": "A short sample app to demonstrate how to get started with Azure Cosmos DB's SQL API",
   "main": "app.js",
   "dependencies": {
-    "@azure/cosmos": "^2.0.0-0"
+    "@azure/cosmos": "^2.0.0-3"
   }
 }
