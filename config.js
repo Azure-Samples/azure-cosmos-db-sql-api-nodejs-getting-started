@@ -14,6 +14,7 @@ config.container = {
 config.items = {
     "Andersen": {
         "id": "Anderson.1",
+        "Country": "USA",
         "lastName": "Andersen",
         "parents": [{
             "firstName": "Thomas"
@@ -36,6 +37,7 @@ config.items = {
     },
     "Wakefield": {
         "id": "Wakefield.7",
+        "Country": "Italy",
         "parents": [{
             "familyName": "Wakefield",
             "firstName": "Robin"
