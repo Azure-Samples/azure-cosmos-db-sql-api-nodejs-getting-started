@@ -11,6 +11,7 @@ const HttpStatusCodes = { NOTFOUND: 404 };
 
 const databaseId = config.database.id;
 const containerId = config.container.id;
+const partitionKey = { kind: "Hash", paths: ["/Country"] };
 
 const client = new CosmosClient({ endpoint: endpoint, auth: { masterKey: masterKey } });
 
@@ -34,7 +35,7 @@ async function readDatabase() {
  * Create the container if it does not exist
  */
 async function createContainer() {
-    const { container } = await client.database(databaseId).containers.createIfNotExists({ id: containerId });
+    const { container } = await client.database(databaseId).containers.createIfNotExists({ id: containerId, partitionKey }, { offerThroughput: 400 });
     console.log(`Created container:\n${config.container.id}\n`);
 }
 
@@ -50,20 +51,8 @@ async function readContainer() {
  * Create family item if it does not exist
  */
 async function createFamilyItem(itemBody) {
-    try {
-        // read the item to see if it exists
-        const { item } = await client.database(databaseId).container(containerId).item(itemBody.id).read();
-        console.log(`Item with family id ${itemBody.id} already exists\n`);
-    }
-    catch (error) {
-        // create the family item if it does not exist
-        if (error.code === HttpStatusCodes.NOTFOUND) {
-            const { item } = await client.database(databaseId).container(containerId).items.create(itemBody);
-            console.log(`Created family item with id:\n${itemBody.id}\n`);
-        } else {
-            throw error;
-        }
-    }
+    const { item } = await client.database(databaseId).container(containerId).items.upsert(itemBody);
+    console.log(`Created family item with id:\n${itemBody.id}\n`);
 };
 
 /**
@@ -83,7 +72,7 @@ async function queryContainer() {
         ]
     };
 
-    const { result: results } = await client.database(databaseId).container(containerId).items.query(querySpec).toArray();
+    const { result: results } = await client.database(databaseId).container(containerId).items.query(querySpec, {enableCrossPartitionQuery:true}).toArray();
     for (var queryResult of results) {
         let resultString = JSON.stringify(queryResult);
         console.log(`\tQuery returned ${resultString}\n`);
@@ -97,14 +86,14 @@ async function replaceFamilyItem(itemBody) {
     console.log(`Replacing item:\n${itemBody.id}\n`);
     // Change property 'grade'
     itemBody.children[0].grade = 6;
-    const { item } = await client.database(databaseId).container(containerId).item(itemBody.id).replace(itemBody);
+    const { item } = await client.database(databaseId).container(containerId).item(itemBody.id, itemBody.Country).replace(itemBody);
 };
 
 /**
  * Delete the item by ID.
  */
 async function deleteFamilyItem(itemBody) {
-    await client.database(databaseId).container(containerId).item(itemBody.id).delete(itemBody);
+    await client.database(databaseId).container(containerId).item(itemBody.id, itemBody.Country).delete(itemBody);
     console.log(`Deleted item:\n${itemBody.id}\n`);
 };
 
@@ -137,6 +126,5 @@ createDatabase()
     .then(() => replaceFamilyItem(config.items.Andersen))
     .then(() => queryContainer())
     .then(() => deleteFamilyItem(config.items.Andersen))
-    .then(() => cleanup())
     .then(() => { exit(`Completed successfully`); })
     .catch((error) => { exit(`Completed with error ${JSON.stringify(error)}`) });
