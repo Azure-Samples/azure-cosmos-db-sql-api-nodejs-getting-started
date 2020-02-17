@@ -4,11 +4,9 @@ const CosmosClient = require("@azure/cosmos").CosmosClient;
 /*
 // This script ensures that the database is setup and populated correctly
 */
-async function main() {
-  const { endpoint, key, databaseId, containerId } = config;
-  const client = new CosmosClient({ endpoint, key });
+async function create(client, databaseId, containerId) {
+  const { partitionKey } = config.partitionKey;
 
-  const partitionKey = { kind: "Hash", paths: ["/category"] };
   /**
    * Create the database if it does not exist
    */
@@ -30,4 +28,4 @@ async function main() {
   console.log(`Created container:\n${container.id}\n`);
 }
 
-main();
+module.exports = { create };

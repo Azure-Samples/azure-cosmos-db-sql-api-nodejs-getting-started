@@ -14,7 +14,7 @@ Azure Cosmos DB is a globally distributed multi-model database. One of the suppo
 
 ## Running this sample
 
-This sample is designed to be run as part of the article, "[Quickstart: use Node.js to query an Azure Cosmos DB SQL API Database](https://docs.microsoft.com/en-us/azure/cosmos-db/create-sql-api-nodejs)". **You must have created the database account and collection as outlined in that article in order to use this code.**
+This sample is designed to be run as part of the article, "[Quickstart: use Node.js to query an Azure Cosmos DB SQL API Database](https://docs.microsoft.com/en-us/azure/cosmos-db/create-sql-api-nodejs)".
 
 - Before you can run this sample, you must have the following perquisites:
   _ An active Azure Cosmos DB account - If you don't have an account, refer to the [Create an Azure Cosmos DB account](https://docs.microsoft.com/en-us/azure/cosmos-db/create-sql-api-nodejs#create-a-database-account) article.
@@ -22,18 +22,18 @@ This sample is designed to be run as part of the article, "[Quickstart: use Node
 
 1. Clone this repository using `git clone git@github.com:Azure-Samples/azure-cosmos-db-sql-api-nodejs-getting-started.git cosmosdb`
 
-2. Change directories to the repo using `cd cosmosdb`
+1. Change directories to the repo using `cd cosmosdb`
 
-3. Next, substitute the endpoint and authorization key in `app.js` with your Azure Cosmos DB account's values.
+1. Next, substitute the endpoint and authorization key in `app.js` with your Azure Cosmos DB account's values.
 
    ```
    const endpoint = "<Your Azure Cosmos account URI>";
    const key = "<Your Azure Cosmos account key>";
    ```
 
-4. Run `npm install` in a terminal to install required npm modules
+1. Run `npm install` in a terminal to install required npm modules
 
-5. Run `node app.js` in a terminal to start your start your node application.
+1. Run `node app.js` in a terminal to start your start your node application.
 
 ## About the code
 

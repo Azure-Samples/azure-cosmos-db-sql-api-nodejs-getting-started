@@ -1,6 +1,7 @@
 // @ts-check
 const CosmosClient = require("@azure/cosmos").CosmosClient;
 const config = require("./config");
+const dbContext = require("./data/databaseContext");
 
 const newItem = {
   id: "3",
@@ -17,6 +18,9 @@ async function main() {
 
   const database = client.database(databaseId);
   const container = database.container(containerId);
+
+  // Make sure Tasks database is already setup. If not, create it.
+  await dbContext.create(client, databaseId, containerId);
 
   try {
     console.log(`Querying container: Items`);
