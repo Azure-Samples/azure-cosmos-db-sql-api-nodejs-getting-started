@@ -1,159 +1,57 @@
-//@ts-check
-const CosmosClient = require('@azure/cosmos').CosmosClient
+// @ts-check
+const CosmosClient = require("@azure/cosmos").CosmosClient;
+const config = require("./config");
 
-const config = require('./config')
-const url = require('url')
+const newItem = {
+  id: "3",
+  category: "fun",
+  name: "Cosmos DB",
+  description: "Complete Cosmos DB Node.js Quickstart ⚡",
+  isComplete: false
+};
 
-const endpoint = config.endpoint
-const key = config.key
+async function main() {
+  const { endpoint, key, databaseId, containerId } = config;
 
-const databaseId = config.database.id
-const containerId = config.container.id
-const partitionKey = { kind: 'Hash', paths: ['/Country'] }
+  const client = new CosmosClient({ endpoint, key });
 
-const client = new CosmosClient({ endpoint, key })
+  const database = client.database(databaseId);
+  const container = database.container(containerId);
 
-/**
- * Create the database if it does not exist
- */
-async function createDatabase() {
-  const { database } = await client.databases.createIfNotExists({
-    id: databaseId
-  })
-  console.log(`Created database:\n${database.id}\n`)
-}
+  try {
+    console.log(`Querying container: Items`);
 
-/**
- * Read the database definition
- */
-async function readDatabase() {
-  const { resource: databaseDefinition } = await client
-    .database(databaseId)
-    .read()
-  console.log(`Reading database:\n${databaseDefinition.id}\n`)
-}
+    // query to return all items
+    const querySpec = {
+      query: "SELECT * from c"
+    };
 
-/**
- * Create the container if it does not exist
- */
-async function createContainer() {
-  const { container } = await client
-    .database(databaseId)
-    .containers.createIfNotExists(
-      { id: containerId, partitionKey },
-      { offerThroughput: 400 }
-    )
-  console.log(`Created container:\n${config.container.id}\n`)
-}
+    // read all items in the Items container
+    const { resources: items } = await container.items
+      .query(querySpec)
+      .fetchAll();
 
-/**
- * Read the container definition
- */
-async function readContainer() {
-  const { resource: containerDefinition } = await client
-    .database(databaseId)
-    .container(containerId)
-    .read()
-  console.log(`Reading container:\n${containerDefinition.id}\n`)
-}
+    console.log(items);
 
-/**
- * Create family item if it does not exist
- */
-async function createFamilyItem(itemBody) {
-  const { item } = await client
-    .database(databaseId)
-    .container(containerId)
-    .items.upsert(itemBody)
-  console.log(`Created family item with id:\n${itemBody.id}\n`)
-}
+    // Create a new item
+    const { resource: createdItem } = await container.items.create(newItem);
+    console.log(`Created item: %s`, createdItem);
 
-/**
- * Query the container using SQL
- */
-async function queryContainer() {
-  console.log(`Querying container:\n${config.container.id}`)
+    const { id, category } = createdItem;
 
-  // query to return all children in a family
-  const querySpec = {
-    query: 'SELECT VALUE r.children FROM root r WHERE r.lastName = @lastName',
-    parameters: [
-      {
-        name: '@lastName',
-        value: 'Andersen'
-      }
-    ]
-  }
+    // Update the item
+    createdItem.isComplete = true;
+    const { resource: updatedItem } = await container
+      .item(id, category)
+      .replace(createdItem);
+    console.log(`Updated item: %s`, updatedItem);
 
-  const { resources: results } = await client
-    .database(databaseId)
-    .container(containerId)
-    .items.query(querySpec)
-    .fetchAll()
-  for (var queryResult of results) {
-    let resultString = JSON.stringify(queryResult)
-    console.log(`\tQuery returned ${resultString}\n`)
+    // Delete the item
+    const { resource: result } = await container.item(id, category).delete();
+    console.log("Deleted item with id: %s", id);
+  } catch (err) {
+    console.log(err.message);
   }
 }
 
-/**
- * Replace the item by ID.
- */
-async function replaceFamilyItem(itemBody) {
-  console.log(`Replacing item:\n${itemBody.id}\n`)
-  // Change property 'grade'
-  itemBody.children[0].grade = 6
-  const { item } = await client
-    .database(databaseId)
-    .container(containerId)
-    .item(itemBody.id, itemBody.Country)
-    .replace(itemBody)
-}
-
-/**
- * Delete the item by ID.
- */
-async function deleteFamilyItem(itemBody) {
-  await client
-    .database(databaseId)
-    .container(containerId)
-    .item(itemBody.id, itemBody.Country)
-    .delete(itemBody)
-  console.log(`Deleted item:\n${itemBody.id}\n`)
-}
-
-/**
- * Cleanup the database and collection on completion
- */
-async function cleanup() {
-  await client.database(databaseId).delete()
-}
-
-/**
- * Exit the app with a prompt
- * @param {string} message - The message to display
- */
-function exit(message) {
-  console.log(message)
-  console.log('Press any key to exit')
-  process.stdin.setRawMode(true)
-  process.stdin.resume()
-  process.stdin.on('data', process.exit.bind(process, 0))
-}
-
-createDatabase()
-  .then(() => readDatabase())
-  .then(() => createContainer())
-  .then(() => readContainer())
-  .then(() => createFamilyItem(config.items.Andersen))
-  .then(() => createFamilyItem(config.items.Wakefield))
-  .then(() => queryContainer())
-  .then(() => replaceFamilyItem(config.items.Andersen))
-  .then(() => queryContainer())
-  .then(() => deleteFamilyItem(config.items.Andersen))
-  .then(() => {
-    exit(`Completed successfully`)
-  })
-  .catch(error => {
-    exit(`Completed with error ${JSON.stringify(error)}`)
-  })
+main();
