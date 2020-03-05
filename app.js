@@ -35,24 +35,39 @@ async function main() {
       .query(querySpec)
       .fetchAll();
 
-    console.log(items);
-
-    // Create a new item
+    items.forEach(item => {
+      console.log(`${item.id} - ${item.description}`);
+    });
+    
+    /** Create new item
+     * newItem is defined at the top of this file
+     */
     const { resource: createdItem } = await container.items.create(newItem);
-    console.log(`Created item: %s`, createdItem);
+    
+    console.log(`\r\nCreated new item: ${createdItem.id} - ${createdItem.description}\r\n`);
 
+    /** Update item
+     * Pull the id and partition key value from the newly created item.
+     * Update the isComplete field to true.
+     */
     const { id, category } = createdItem;
 
-    // Update the item
     createdItem.isComplete = true;
+
     const { resource: updatedItem } = await container
       .item(id, category)
       .replace(createdItem);
-    console.log(`Updated item: %s`, updatedItem);
 
-    // Delete the item
+    console.log(`Updated item: ${updatedItem.id} - ${updatedItem.description}`); 
+    console.log(`Updated isComplete to ${updatedItem.isComplete}\r\n`);
+
+    /**
+     * Delete item
+     * Pass the id and partition key value to delete the item
+     */
     const { resource: result } = await container.item(id, category).delete();
-    console.log("Deleted item with id: %s", id);
+    console.log(`Deleted item with id: ${id}`);
+    
   } catch (err) {
     console.log(err.message);
   }
