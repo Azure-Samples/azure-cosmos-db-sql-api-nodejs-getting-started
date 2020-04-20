@@ -1,3 +1,4 @@
+  //  <createDatabaseAndContainer>
 const config = require("../config");
 const CosmosClient = require("@azure/cosmos").CosmosClient;
 
@@ -29,3 +30,4 @@ async function create(client, databaseId, containerId) {
 }
 
 module.exports = { create };
+  //  </createDatabaseAndContainer>
