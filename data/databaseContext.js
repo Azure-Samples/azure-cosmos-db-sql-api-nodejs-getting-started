@@ -5,7 +5,7 @@ const CosmosClient = require("@azure/cosmos").CosmosClient;
 // This script ensures that the database is setup and populated correctly
 */
 async function create(client, databaseId, containerId) {
-  const { partitionKey } = config.partitionKey;
+  const partitionKey = config.partitionKey;
 
   /**
    * Create the database if it does not exist
