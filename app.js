@@ -37,9 +37,7 @@ async function main() {
     const querySpec = {
       query: "SELECT * from c"
     };
-    // </QueryItems>
     
-    // <GetItems>
     // read all items in the Items container
     const { resources: items } = await container.items
       .query(querySpec)
@@ -48,7 +46,7 @@ async function main() {
     items.forEach(item => {
       console.log(`${item.id} - ${item.description}`);
     });
-    // </GetItems>
+    // </QueryItems>
     
     // <CreateItem>
     /** Create new item
