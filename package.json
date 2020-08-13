@@ -4,9 +4,12 @@
   "description": "A short sample app to demonstrate how to get started with Azure Cosmos DB's SQL API",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node app.js"
   },
   "dependencies": {
     "@azure/cosmos": "3.5.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.2"
   }
 }
