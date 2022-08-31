@@ -24,7 +24,7 @@ This sample is designed to be run as part of the article, "[Quickstart: use Node
 
 1. Change directories to the repo using `cd cosmosdb`
 
-1. Next, substitute the endpoint and authorization key in `app.js` with your Azure Cosmos DB account's values.
+1. Next, substitute the endpoint and authorization key in `config.js` with your Azure Cosmos DB account's values.
 
    ```
    const endpoint = "<Your Azure Cosmos account URI>";
